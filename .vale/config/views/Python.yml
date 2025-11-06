@@ -1,0 +1,24 @@
+---
+# Copyright 2025 edcsnt. All rights reserved.
+engine: tree-sitter
+scopes:
+  - name: module-docstring
+    expr: |
+      ((module
+      (expression_statement (string) @docstring))
+      (#offset! @docstring 0 3 0 -3))
+    type: rst
+
+  - name: class-docstring
+    expr: |
+      ((class_definition
+      body: (block . (expression_statement (string) @docstring)))
+      (#offset! @docstring 0 3 0 -3))
+    type: rst
+
+  - name: function-docstring
+    expr: |
+      ((function_definition
+      body: (block . (expression_statement (string) @docstring)))
+      (#offset! @docstring 0 3 0 -3))
+    type: rst

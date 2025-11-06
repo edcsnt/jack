@@ -1,0 +1,313 @@
+# Copyright 2025 edcsnt. All rights reserved.
+[build-system]
+requires = [
+  # support for the `bdist_wheel` command:
+  # <https://setuptools.pypa.io/en/stable/history.html#id214>
+  "setuptools>=70.1.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jack"
+description = "rip courses off course platforms"
+readme = "README"
+# support for union types as X | Y:
+# <https://docs.python.org/3/library/stdtypes.html#union-type>
+requires-python = ">=3.10"
+authors = [
+  { name = "edcsnt" },
+]
+keywords = [
+  "automation",
+  "course",
+  "download",
+  "lesson",
+  "video",
+  "webrip",
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "Environment :: Web Environment",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Natural Language :: English",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: Microsoft :: Windows :: Windows 11",
+  "Operating System :: POSIX",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "aiodns",
+  "aiohttp",
+  "selenium",
+]
+dynamic = [
+  "version",
+]
+
+[project.urls]
+homepage = "https://github.com/edcsnt/jack"
+source = "https://github.com/edcsnt/jack.git"
+download = "https://github.com/edcsnt/jack/archive/refs/heads/master.tar.gz"
+changelog = "https://github.com/edcsnt/jack/commits/master/"
+documentation = "https://github.com/edcsnt/jack/raw/refs/heads/master/README"
+issues = "https://github.com/edcsnt/jack/issues"
+
+[project.scripts]
+jack = "jack.jack:main"
+
+[tool.mypy]
+files = [
+  ".",
+]
+
+disallow_any_unimported = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+
+warn_unreachable = true
+
+show_error_context = true
+show_column_numbers = true
+show_error_code_links = true
+pretty = true
+
+strict = true
+
+[tool.pylint.main]
+disable = [
+  # <https://docs.astral.sh/ruff/rules/try-consider-else/>
+  "no-else-return",
+]
+enable = [
+  "all",
+]
+ignore = [
+  ".tox",
+]
+jobs = 0
+output-format = "colorized"
+# <https://github.com/pylint-dev/pylint/issues/9113>
+py-version = "3.10"
+
+[tool.pylint.basic]
+bad-names = [
+  # <https://pylint.readthedocs.io/en/stable/user_guide/configuration/all-options.html#bad-names>
+  "foo",
+  "bar",
+  "baz",
+  "toto",
+  "tutu",
+  "tata",
+  # <https://peps.python.org/pep-0008/#names-to-avoid>
+  "l",
+  "O",
+  "I",
+]
+class-attribute-naming-style = "snake_case"
+include-naming-hint = true
+inlinevar-naming-style = "snake_case"
+
+[tool.pylint.classes]
+check-protected-access-in-special-methods = true
+defining-attr-methods = [
+  "__init__",
+]
+exclude-protected = [
+]
+
+[tool.pylint.design]
+# <https://youtu.be/QM1iUe6IofM?t=409>
+max-parents = 0
+
+[tool.pylint.format]
+expected-line-ending-format = "LF"
+# <https://github.com/pylint-dev/pylint/issues/2178>
+ignore-long-lines = "^.*# noqa: .*$|^.*(https{0,1}://){0,1}[-0-9a-z]{1,}(\\.[-0-9a-z]{1,}){1,}(/[#-\\.0-9a-z]{1,}){0,}\"{0,3}'{0,1}$"
+# <https://peps.python.org/pep-0008/#maximum-line-length>
+max-line-length = 79
+max-module-lines = 200
+single-line-class-stmt = true
+single-line-if-stmt = true
+
+[tool.pylint.imports]
+import-graph = "deps.svgz"
+
+[tool.pylint.logging]
+logging-format-style = "new"
+
+[tool.pylint.reports]
+reports = true
+
+[tool.pylint.spelling]
+spelling-dict = "en_US"
+# <https://www.sphinx-doc.org/en/master/tutorial/automatic-doc-generation.html>
+spelling-ignore-words = "rtype,str"
+
+[tool.pylint.string]
+check-quote-consistency = true
+check-str-concat-over-line-jumps = true
+
+[tool.pylint.variables]
+init-import = true
+
+[tool.pylint.broad_try_clause]
+# <https://docs.astral.sh/ruff/rules/try-except-in-loop/>
+max-try-statements = 2
+
+[tool.pylint.parameter_documentation]
+accept-no-param-doc = false
+accept-no-raise-doc = false
+accept-no-return-doc = false
+accept-no-yields-doc = false
+default-docstring-type = "sphinx"
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.format]
+quote-style = "single"
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+ignore = [
+  # TODO: keep up with <https://github.com/astral-sh/ruff/issues/9216>
+  "COM812",
+]
+select = [
+  "ALL",
+]
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.setuptools.dynamic]
+version = { attr = "jack.__version__" }
+
+[tool.tox]
+requires = [
+  # support for native TOML configuration:
+  # <https://tox.wiki/en/stable/changelog.html#features-4-21-0>
+  "tox>=4.21.0",
+]
+env_list = [
+  "mypy",
+  "pylint",
+  "ruff-check",
+  "ruff-format",
+  "yamllint",
+]
+
+[tool.tox.env_run_base]
+skip_install = true
+
+[tool.tox.env.build]
+description = "build sdist and wheel"
+deps = [
+  "build>=0.1.0",
+]
+commands = [
+  [
+    "python",
+    "-m",
+    "build",
+  ],
+]
+
+[tool.tox.env.jack]
+description = "run jack"
+skip_install = false
+commands = [
+  [
+    "jack",
+    "{posargs}",
+  ],
+]
+
+[tool.tox.env.mypy]
+description = "enforce static typing"
+deps = [
+  # support for the `show_error_code_links` option:
+  # <https://mypy.readthedocs.io/en/stable/changelog.html#optionally-show-links-to-error-code-documentation>
+  "mypy>=1.5.0",
+]
+commands = [
+  [
+    "mypy",
+  ],
+]
+
+# TODO: keep up with <https://github.com/astral-sh/ruff/issues/970>
+[tool.tox.env.pylint]
+description = "lint code with pylint"
+deps = [
+  "pylint[spelling]>=3.3.0",
+]
+commands = [
+  [
+    "pylint",
+    # <https://github.com/pylint-dev/pylint/issues/8217#issuecomment-1656987662>
+    "--enable-all-extensions",
+    ".",
+  ],
+]
+
+[tool.tox.env.ruff-check]
+description = "lint code with Ruff"
+deps = [
+  # use Ruff's 2025 style guide:
+  # <https://github.com/astral-sh/ruff/blob/main/changelogs/0.9.x.md#formatter>
+  "ruff>=0.9.0",
+]
+commands = [
+  [
+    "ruff",
+    "check",
+  ],
+]
+
+[tool.tox.env.ruff-format]
+description = "format code"
+deps = [
+  "ruff>=0.9.0",
+]
+commands = [
+  [
+    "ruff",
+    "format",
+    "--diff",
+  ],
+]
+
+[tool.tox.env.yamllint]
+description = "lint YAML files"
+deps = [
+  # support for the `forbid-unused-anchors` option:
+  # <https://github.com/adrienverge/yamllint/blob/master/CHANGELOG.rst#1320-2023-05-22>
+  "yamllint>=1.32.0",
+]
+commands = [
+  [
+    "yamllint",
+    "-f",
+    "colored",
+    "-s",
+    ".",
+  ],
+]

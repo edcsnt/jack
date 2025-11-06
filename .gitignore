@@ -1,0 +1,15 @@
+# Copyright 2025 edcsnt. All rights reserved.
+# build
+**/*.egg-info/
+/dist/
+# bytecode
+**/__pycache__/
+# pylint
+/deps.svgz
+# Ruff
+/.ruff_cache/
+# tox
+/.tox/
+# Vale
+/.vale/*
+!/.vale/config/

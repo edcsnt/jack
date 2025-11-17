@@ -22,3 +22,4 @@ scopes:
       body: (block . (expression_statement (string) @docstring)))
       (#offset! @docstring 0 3 0 -3))
     type: rst
+...

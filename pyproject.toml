@@ -11,9 +11,9 @@ build-backend = "setuptools.build_meta"
 name = "jack"
 description = "rip courses off course platforms"
 readme = "README"
-# support for union types as X | Y:
-# <https://docs.python.org/3/library/stdtypes.html#union-type>
-requires-python = ">=3.10"
+# support for `typing.TypeIs`:
+# <https://docs.python.org/3/whatsnew/3.13.html#typing>
+requires-python = ">=3.13"
 authors = [
   { name = "edcsnt" },
 ]
@@ -39,17 +39,15 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
   "Topic :: Utilities",
 ]
 dependencies = [
-  "aiodns",
-  "aiohttp",
-  "selenium",
+  "aiohttp==3.9.0b1",
+  # support for automated Firefox management by Selenium Manager:
+  # <https://www.selenium.dev/blog/2023/whats_new_in_selenium_manager_0.4.12_shipped_with_selenium_4.12.0/#automated-firefox-management>
+  "selenium==4.12.0",
 ]
 dynamic = [
   "version",
@@ -64,7 +62,7 @@ documentation = "https://github.com/edcsnt/jack/raw/refs/heads/master/README"
 issues = "https://github.com/edcsnt/jack/issues"
 
 [project.scripts]
-jack = "jack.jack:main"
+jack = "jack.__main__:main"
 
 [tool.mypy]
 files = [
@@ -86,19 +84,18 @@ strict = true
 
 [tool.pylint.main]
 disable = [
-  # <https://docs.astral.sh/ruff/rules/try-consider-else/>
-  "no-else-return",
+  # <https://github.com/astral-sh/ruff/issues/14118>
+  "inconsistent-quotes",
 ]
 enable = [
   "all",
 ]
-ignore = [
+ignore-paths = [
   ".tox",
 ]
 jobs = 0
 output-format = "colorized"
-# <https://github.com/pylint-dev/pylint/issues/9113>
-py-version = "3.10"
+reports = true
 
 [tool.pylint.basic]
 bad-names = [
@@ -133,10 +130,10 @@ max-parents = 0
 [tool.pylint.format]
 expected-line-ending-format = "LF"
 # <https://github.com/pylint-dev/pylint/issues/2178>
-ignore-long-lines = "^.*# noqa: .*$|^.*(https{0,1}://){0,1}[-0-9a-z]{1,}(\\.[-0-9a-z]{1,}){1,}(/[#-\\.0-9a-z]{1,}){0,}\"{0,3}'{0,1}$"
+ignore-long-lines = "^.*# noqa: .*$|^.*# type: .*$|^.*# <http.*$"
 # <https://peps.python.org/pep-0008/#maximum-line-length>
 max-line-length = 79
-max-module-lines = 200
+max-module-lines = 550
 single-line-class-stmt = true
 single-line-if-stmt = true
 
@@ -146,13 +143,12 @@ import-graph = "deps.svgz"
 [tool.pylint.logging]
 logging-format-style = "new"
 
-[tool.pylint.reports]
-reports = true
-
-[tool.pylint.spelling]
-spelling-dict = "en_US"
-# <https://www.sphinx-doc.org/en/master/tutorial/automatic-doc-generation.html>
-spelling-ignore-words = "rtype,str"
+[tool.pylint.miscellaneous]
+check-fixme-in-docstring = true
+notes = [
+  "FIXME",
+  "XXX",
+]
 
 [tool.pylint.string]
 check-quote-consistency = true
@@ -183,6 +179,12 @@ skip-magic-trailing-comma = true
 ignore = [
   # TODO: keep up with <https://github.com/astral-sh/ruff/issues/9216>
   "COM812",
+  # tolerate postponing to-dos
+  "FIX002",
+  # single-author project
+  "TD002",
+  # not using an issue tracker
+  "TD003",
 ]
 select = [
   "ALL",
@@ -236,16 +238,23 @@ skip_install = false
 commands = [
   [
     "jack",
-    "{posargs}",
+    "-o",
+    { replace = "posargs", default = [".", "", ""], extend = true },
   ],
 ]
 
 [tool.tox.env.mypy]
 description = "enforce static typing"
 deps = [
-  # support for the `show_error_code_links` option:
-  # <https://mypy.readthedocs.io/en/stable/changelog.html#optionally-show-links-to-error-code-documentation>
-  "mypy>=1.5.0",
+  # no `break` in `finally` block (`SyntaxWarning` in Python 3.14+):
+  # <https://github.com/aio-libs/aiohttp/pull/10434>
+  "aiohttp>=3.11.13",
+  # support for `typing.TypeIs`:
+  # <https://mypy.readthedocs.io/en/stable/changelog.html#basic-support-for-python-3-13>
+  "mypy>=1.12.0",
+  # Type annotations for the `selenium.webdriver.common.by` module:
+  # <https://github.com/SeleniumHQ/selenium/pull/16300>
+  "selenium>=4.37.0",
 ]
 commands = [
   [
@@ -256,8 +265,9 @@ commands = [
 # TODO: keep up with <https://github.com/astral-sh/ruff/issues/970>
 [tool.tox.env.pylint]
 description = "lint code with pylint"
+skip_install = false
 deps = [
-  "pylint[spelling]>=3.3.0",
+  "pylint>=3.3.0",
 ]
 commands = [
   [

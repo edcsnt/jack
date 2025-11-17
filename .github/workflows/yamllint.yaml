@@ -1,0 +1,30 @@
+---
+# Copyright 2025 edcsnt. All rights reserved.
+name: yamllint
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/*.{yaml,yml}'
+      - .github/workflows/yamllint.yaml
+      - .yamllint
+  workflow_dispatch: {}
+permissions: {}
+defaults:
+  run:
+    shell: sh
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+jobs:
+  yamllint:
+    runs-on:
+      - ubuntu-latest
+    container: docker.io/${{ github.repository_owner }}/tox:latest
+    steps:
+      - run: |
+          tox run -e ${{ github.workflow }}
+    timeout-minutes: 1
+...

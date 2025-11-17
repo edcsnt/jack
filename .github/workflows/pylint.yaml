@@ -1,0 +1,30 @@
+---
+# Copyright 2025 edcsnt. All rights reserved.
+name: pylint
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/*.py'
+      - .github/workflows/pylint.yaml
+      - pyproject.toml
+  workflow_dispatch: {}
+permissions: {}
+defaults:
+  run:
+    shell: sh
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+jobs:
+  pylint:
+    runs-on:
+      - ubuntu-latest
+    container: docker.io/${{ github.repository_owner }}/tox:latest
+    steps:
+      - run: |
+          tox run -e ${{ github.workflow }}
+    timeout-minutes: 1
+...
